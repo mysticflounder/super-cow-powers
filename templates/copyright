@@ -1,0 +1,11 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: *
+Copyright: __YEAR__ __MAINTAINER_NAME__
+License: __LICENSE__
+ __LICENSE_TEXT__
+
+Files: debian/*
+Copyright: __YEAR__ __MAINTAINER_NAME__
+License: __LICENSE__
+ __LICENSE_TEXT__

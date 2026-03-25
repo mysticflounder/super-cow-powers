@@ -1,0 +1,30 @@
+#!/usr/bin/make -f
+
+# Install root: /opt/venvs/__PKG__/
+# This is the recommended default — clean separation from system Python.
+# Alternative: set to /usr/lib and add --install-suffix __PKG__ to dh_virtualenv.
+# See references/dh-virtualenv-patterns.md for details on both strategies.
+export DH_VIRTUALENV_INSTALL_ROOT=/opt/venvs
+
+%:
+	dh $@ --with python-virtualenv
+
+override_dh_virtualenv:
+	dh_virtualenv --python /usr/bin/python3 --builtin-venv \
+		--upgrade-pip --preinstall "setuptools>=70" --preinstall "wheel" \
+		--extra-pip-arg "--no-cache-dir"
+# To use system packages instead of full vendoring, add:
+#		--use-system-packages
+# Then list those packages in BOTH Build-Depends and Depends in control.
+
+# Prevent stripping pip-installed binaries (they contain pre-built .so files)
+override_dh_strip:
+	dh_strip --exclude=site-packages
+
+# Prevent shared library dependency errors from bundled .so files
+override_dh_shlibdeps:
+	dh_shlibdeps --exclude=site-packages
+
+# Uncomment if dh_strip_nondeterminism causes build issues:
+# override_dh_strip_nondeterminism:
+#	true

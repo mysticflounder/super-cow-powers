@@ -1,0 +1,45 @@
+# Source stanza — describes how to build the package
+Source: __PKG__
+# Section: categorizes the package. Common values: net, utils, python, web, misc
+Section: net
+# Priority: almost always "optional"
+Priority: optional
+# Maintainer: must be a working email address for public packages
+Maintainer: __MAINTAINER_NAME__ <__MAINTAINER_EMAIL__>
+Build-Depends:
+ debhelper-compat (= 13),
+ dh-virtualenv (>= 1.2),
+ python3,
+ python3-venv,
+ python3-dev,
+ python3-setuptools,
+# Uncomment if building packages with native C extensions:
+# libffi-dev,
+# libssl-dev,
+# build-essential,
+#
+# If using --use-system-packages in debian/rules, list system Python
+# packages here too (they must appear in BOTH Build-Depends and Depends):
+# python3-numpy,
+# python3-aiohttp,
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+
+# Binary stanza — describes the installable package
+Package: __PKG__
+# Architecture: use "any" if pip wheels contain compiled C extensions (most do).
+# Use "all" only for pure-Python packages with zero native dependencies.
+# Use a specific arch like "arm64" or "amd64" if you only build for one target.
+Architecture: any
+Depends: ${misc:Depends}, python3
+# If using --use-system-packages, list runtime Python deps here:
+# Depends: ${misc:Depends}, python3, python3-numpy, python3-aiohttp
+#
+# Suggests: packages that enhance functionality but aren't required
+# Suggests: ufw | ferm
+Description: __SHORT_DESCRIPTION__
+ __EXTENDED_DESCRIPTION__
+ .
+ Explain what the package does and why someone would install it.
+ Each line is indented by exactly one space.
+ Use a dot on its own line for paragraph breaks.

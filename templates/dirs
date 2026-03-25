@@ -1,0 +1,15 @@
+# Directories to create during package installation
+# These are created empty by dpkg before postinst runs.
+# postinst then sets ownership and permissions as needed.
+#
+# Only list directories that aren't created by other mechanisms
+# (e.g., directories that .install files copy into are created automatically).
+
+# Config directory — files installed here are auto-detected as conffiles
+/etc/__PKG__
+
+# Log directory — set ownership in postinst, add logrotate if needed
+/var/log/__PKG__
+
+# Data directory — service working directory, runtime state
+/var/lib/__PKG__

@@ -1,0 +1,12 @@
+# Symlink manifest
+# Format: <source-path> <destination-path> (absolute paths, one pair per line)
+#
+# Essential for /opt/venvs/ install strategy — exposes venv entry points on PATH.
+# For /usr/lib/ strategy, you can either use .links or reference the full path
+# in the .service file's ExecStart= directly.
+
+# Map venv entry point to /usr/bin/
+/opt/venvs/__PKG__/bin/__PKG__ /usr/bin/__PKG__
+
+# For /usr/lib/ strategy, use this instead:
+# /usr/lib/__PKG__/bin/__PKG__ /usr/bin/__PKG__

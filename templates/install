@@ -1,0 +1,15 @@
+# File installation manifest
+# Format: <source-path> <destination-directory>
+#
+# Copies files from the source tree into the package at build time.
+# Paths are relative to the project root.
+#
+# For files needing custom permissions, use dh_install override in
+# debian/rules with "install -m" commands instead.
+
+# Install config file to /etc/__PKG__/
+# config.yaml /etc/__PKG__/
+
+# Install firewall rules (optional)
+# debian/__PKG__-ferm.conf /etc/ferm/ferm.d/
+# debian/__PKG__-ufw /etc/ufw/applications.d/

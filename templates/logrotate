@@ -1,0 +1,20 @@
+# Logrotate configuration for __PKG__
+# Install to /etc/logrotate.d/__PKG__ via .install file:
+#   debian/__PKG__.logrotate /etc/logrotate.d/
+#
+# Only needed if the service writes its own log files to /var/log/__PKG__/.
+# If the service logs to stdout/stderr (captured by journald), skip this file.
+
+/var/log/__PKG__/*.log {
+    daily
+    missingok
+    rotate 14
+    compress
+    delaycompress
+    notifempty
+    create 0640 __PKG__ __PKG__
+    sharedscripts
+    postrotate
+        systemctl reload __PKG__ 2>/dev/null || true
+    endscript
+}

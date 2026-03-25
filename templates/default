@@ -1,0 +1,14 @@
+# Default configuration for __PKG__ service
+# This file is sourced by systemd via EnvironmentFile=-/etc/default/__PKG__
+#
+# Variables defined here are available in the service's ExecStart command
+# via ${VARIABLE_NAME} syntax.
+#
+# This file is a conffile (installed to /etc/) — dpkg will preserve your
+# changes on upgrade and prompt if the packaged version changes.
+#
+# Format: POSIX sh KEY=value pairs. No "export", no complex syntax.
+
+# __UPPER_PKG___HOST=0.0.0.0
+# __UPPER_PKG___PORT=8080
+# __UPPER_PKG___LOG_LEVEL=info

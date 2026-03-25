@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+# Do NOT manually stop the service here.
+# dh_installsystemd generates service stop/disable commands and inserts
+# them at #DEBHELPER#. Manual stops are redundant and can race with
+# debhelper's generated code.
+
+#DEBHELPER#
+
+exit 0

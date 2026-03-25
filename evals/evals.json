@@ -1,0 +1,59 @@
+{
+  "skill_name": "super-cow-powers",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a Python FastAPI app in ~/myapp that serves a REST API. It has a pyproject.toml and the entry point is `myapp.main:app` which I run with uvicorn. I want to package it as a .deb that runs as a systemd service on my Debian server. The service should run as its own user, store data in /var/lib/myapp, and have its config at /etc/myapp/config.yaml. Can you set up the full debian/ directory for me?",
+      "expected_output": "Full daemon packaging: debian/ directory with control, rules, changelog, copyright, source/format, myapp.service, myapp.postinst, myapp.prerm, myapp.postrm, myapp.default, myapp.install, myapp.links, myapp.dirs, myapp.lintian-overrides. postinst creates system user with adduser --system, guards file creation with existence checks. prerm contains only #DEBHELPER#. Service file has security hardening directives. Rules uses dh-virtualenv with /opt/venvs/ or /usr/lib/ strategy.",
+      "files": [],
+      "expectations": [
+        "debian/control exists with Source, Package, Maintainer, Build-Depends including dh-virtualenv, Architecture, Depends, and Description fields",
+        "debian/rules exists, is marked executable or has #!/usr/bin/make -f, and uses dh_virtualenv with --builtin-venv",
+        "debian/changelog exists with valid format (package name, version, distribution, maintainer, date)",
+        "debian/copyright exists with Format: URL and license information",
+        "debian/source/format exists containing either '3.0 (native)' or '3.0 (quilt)'",
+        "A .service file exists with User=, ExecStart=, Restart=, and at least 3 security hardening directives (NoNewPrivileges, ProtectSystem, ProtectHome, PrivateTmp)",
+        "A .postinst file exists with set -e, case configure, adduser --system guarded by getent passwd check, and #DEBHELPER# token",
+        "A .prerm file exists with set -e and #DEBHELPER# token, and does NOT manually stop the service",
+        "A .postrm file exists with set -e, case purge for cleanup (deluser, rm -rf), and #DEBHELPER# token",
+        "A .dirs file exists listing /etc/myapp, /var/lib/myapp, and /var/log/myapp",
+        "A .links file exists mapping the venv entry point to /usr/bin/myapp",
+        "A .lintian-overrides file exists with at least one dh-virtualenv-related override",
+        "No python3-* packages appear in Depends unless --use-system-packages is used in rules",
+        "A .default file or EnvironmentFile reference exists for runtime configuration"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I have a Python project with an existing debian/ directory. The debian/rules uses dh-virtualenv but does NOT have --use-system-packages. However, debian/control lists python3-numpy and python3-requests in the Depends field. The prerm script manually runs 'systemctl stop myservice' before #DEBHELPER#. There's no debian/copyright, no debian/source/format, and no lintian-overrides file. Can you audit this and tell me what's wrong?",
+      "expected_output": "Identifies: (1) python3-* in Depends without --use-system-packages in rules is inconsistent, (2) prerm should not manually stop the service — #DEBHELPER# handles it, (3) missing copyright file, (4) missing source/format file, (5) missing lintian-overrides file.",
+      "files": [],
+      "expectations": [
+        "Identifies that python3-* packages in Depends are inconsistent with the absence of --use-system-packages in rules",
+        "Identifies that prerm manually stops the service, which is redundant when #DEBHELPER# handles it via dh_installsystemd",
+        "Identifies that debian/copyright file is missing",
+        "Identifies that debian/source/format file is missing",
+        "Identifies that no lintian-overrides file exists for dh-virtualenv warnings",
+        "Does NOT invent issues that are not described in the prompt"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I wrote a Python CLI tool called 'datamunch' that processes CSV files. It's not a daemon — users just run it from the command line. It has a pyproject.toml with a [project.scripts] entry point. I want to package it as a .deb so I can install it on my servers with apt. Can you create the debian/ directory?",
+      "expected_output": "Minimal CLI packaging: debian/ with control, rules, changelog, copyright, source/format, datamunch.links, datamunch.lintian-overrides. NO service file, NO postinst with user creation, NO prerm, NO postrm, NO .default, NO .dirs (no runtime directories needed). Rules uses dh-virtualenv. Links maps venv entry point to /usr/bin/datamunch.",
+      "files": [],
+      "expectations": [
+        "debian/control exists with required fields and does NOT include systemd-related dependencies",
+        "debian/rules exists using dh-virtualenv",
+        "debian/changelog exists with valid format",
+        "debian/copyright exists",
+        "debian/source/format exists",
+        "A .links file exists mapping the venv entry point to /usr/bin/datamunch",
+        "No .service file is created (CLI tool, not a daemon)",
+        "No postinst with adduser/system user creation is created (CLI tool, not a daemon)",
+        "No .default environment file is created (CLI tool, not a daemon)",
+        "Does NOT create unnecessary files like .dirs for /var/lib/ or /var/log/ directories (CLI tool has no runtime state)"
+      ]
+    }
+  ]
+}

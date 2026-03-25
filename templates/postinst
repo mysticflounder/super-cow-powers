@@ -1,0 +1,40 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    configure)
+        # Create system user for the service (idempotent)
+        # --home /nonexistent: daemon doesn't need a home directory
+        # Change to --home /var/lib/__PKG__ if service needs a working directory
+        if ! getent passwd __PKG__ >/dev/null 2>&1; then
+            adduser --system --group --no-create-home \
+                --home /nonexistent --shell /usr/sbin/nologin \
+                __PKG__
+        fi
+
+        # Set ownership on directories created by .dirs file
+        chown __PKG__:__PKG__ /var/log/__PKG__
+        chown __PKG__:__PKG__ /var/lib/__PKG__
+
+        # Generate secrets on first install only.
+        # IMPORTANT: Guard with existence check to avoid overwriting
+        # user changes on upgrade. Files created by postinst are NOT
+        # conffiles — dpkg does not protect them. See SKILL.md "conffile trap".
+        # if [ ! -f /etc/__PKG__/secret.key ]; then
+        #     dd if=/dev/urandom bs=32 count=1 2>/dev/null | base64 -w0 > /etc/__PKG__/secret.key
+        #     chown root:__PKG__ /etc/__PKG__/secret.key
+        #     chmod 640 /etc/__PKG__/secret.key
+        # fi
+
+        # Reload firewall if applicable (optional — remove if not needed)
+        # if systemctl is-active --quiet ferm 2>/dev/null; then
+        #     systemctl reload ferm || true
+        # fi
+        ;;
+esac
+
+# IMPORTANT: #DEBHELPER# goes AFTER your logic so the service starts
+# after user/dirs/config are ready. debhelper inserts service enable/start here.
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,26 @@
+# Lintian overrides for dh-virtualenv packages
+#
+# dh-virtualenv bundles an entire Python virtualenv inside the package.
+# This triggers several lintian warnings that are expected and safe to ignore.
+#
+# Only include overrides for warnings your package actually generates.
+# Build once, check "lintian" output, then add the relevant lines.
+
+# Bundled pip-installed packages are expected in a dh-virtualenv package
+__PKG__: embedded-library *
+__PKG__: extra-license-file *
+
+# Venv scripts use the bundled Python interpreter path
+__PKG__: unusual-interpreter *
+__PKG__: script-with-language-extension *
+
+# Pre-built shared objects from pip wheels lack Debian hardening
+__PKG__: hardening-no-fortify-functions *
+__PKG__: hardening-no-pie *
+__PKG__: library-not-linked-against-libc *
+__PKG__: shared-library-lacks-prerequisites *
+
+# /opt/venvs/ is not standard FHS but is conventional for dh-virtualenv
+# Remove these two lines if using /usr/lib/ install strategy
+__PKG__: dir-or-file-in-opt *
+__PKG__: file-in-unusual-dir *

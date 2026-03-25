@@ -1,0 +1,45 @@
+[Unit]
+Description=__PKG__ service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=__PKG__
+Group=__PKG__
+
+# Environment variables from /etc/default/__PKG__
+# The - prefix means systemd won't fail if the file is missing
+EnvironmentFile=-/etc/default/__PKG__
+
+# Adjust the command and arguments for your application
+ExecStart=/usr/bin/__PKG__ --config /etc/__PKG__/config.yaml
+
+# Restart on failure with 5-second delay
+Restart=on-failure
+RestartSec=5
+
+# --- Security hardening ---
+# These are all safe defaults. Only remove if your service specifically needs
+# the capability being restricted.
+
+# Process can never gain new privileges (no setuid, no capability additions)
+NoNewPrivileges=yes
+
+# Mount /usr, /boot, /efi read-only; prevent writes except to allowed paths
+ProtectSystem=strict
+
+# Make /home, /root, /run/user inaccessible
+ProtectHome=yes
+
+# Give the service its own /tmp isolated from other processes
+PrivateTmp=yes
+
+# Whitelist directories the service needs to write to
+ReadWritePaths=/var/log/__PKG__ /var/lib/__PKG__
+
+# Explicitly mark config as read-only (documentation under strict mode)
+ReadOnlyPaths=/etc/__PKG__
+
+[Install]
+WantedBy=multi-user.target

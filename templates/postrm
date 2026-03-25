@@ -1,0 +1,28 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    purge)
+        # Remove system user and group created in postinst
+        if getent passwd __PKG__ >/dev/null 2>&1; then
+            deluser --system __PKG__ || true
+        fi
+        if getent group __PKG__ >/dev/null 2>&1; then
+            delgroup --system __PKG__ || true
+        fi
+
+        # Remove data and log directories
+        rm -rf /var/log/__PKG__
+        rm -rf /var/lib/__PKG__
+
+        # Remove config directory (includes postinst-generated files
+        # that dpkg doesn't track as conffiles)
+        rm -rf /etc/__PKG__
+        ;;
+esac
+
+# #DEBHELPER# goes AFTER purge cleanup so debhelper can clean up
+# systemd unit files and other generated artifacts.
+#DEBHELPER#
+
+exit 0

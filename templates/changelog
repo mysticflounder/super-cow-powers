@@ -1,0 +1,5 @@
+__PKG__ (__VERSION__) unstable; urgency=low
+
+  * Initial packaging with dh-virtualenv.
+
+ -- __MAINTAINER_NAME__ <__MAINTAINER_EMAIL__>  __DATE__
