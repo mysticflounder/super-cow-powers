@@ -1,6 +1,6 @@
 # super-cow-powers
 
-A Claude Code skill that enforces consistent Debian packaging conventions for Python projects using dh-virtualenv.
+A Claude Code skill for Debian packaging, with specific support for Python projects using dh-virtualenv.
 
 ```
                  (__)
