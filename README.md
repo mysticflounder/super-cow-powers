@@ -109,6 +109,9 @@ We gladly accept AI-generated PRs. They are held to the same standard as human P
 ## Roadmap
 
 - **Programmatic cross-file validation** — the cross-file consistency checks (Checklist 4) are currently enforced by skill instructions to the model, not by a script. A `scripts/validate-debian.sh` that mechanically verifies install root vs links paths, ReadWritePaths vs dirs, EnvironmentFile vs default, etc. would make the checks reliable regardless of model compliance.
+- **Hooks for real-time enforcement** — Claude Code hooks that catch convention violations as they happen:
+  - PostToolUse hook on Write/Edit to `debian/` files — validate conventions inline (e.g., reject prerm with manual `systemctl stop`, flag missing `set -e` or `#DEBHELPER#`)
+  - Stop hook — run the cross-file validation script before the model declares packaging complete, blocking completion if checks fail
 
 ## License
 
