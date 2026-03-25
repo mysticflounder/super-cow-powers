@@ -106,6 +106,10 @@ We gladly accept AI-generated PRs. They are held to the same standard as human P
 - **Verify templates build.** If you modify a template, confirm that a package built with the modified template actually builds with `dpkg-buildpackage`. "It looks right" is not sufficient.
 - **Don't inflate.** Resist the urge to add tangentially related content, extra sections, or "helpful" expansions that weren't asked for. The skill is intentionally concise.
 
+## Roadmap
+
+- **Programmatic cross-file validation** — the cross-file consistency checks (Checklist 4) are currently enforced by skill instructions to the model, not by a script. A `scripts/validate-debian.sh` that mechanically verifies install root vs links paths, ReadWritePaths vs dirs, EnvironmentFile vs default, etc. would make the checks reliable regardless of model compliance.
+
 ## License
 
 This project is licensed under the GNU General Public License v3.0 — see [LICENSE](LICENSE) for details.
