@@ -14,48 +14,54 @@ A Claude Code skill for Debian packaging. Conventions, templates, and validation
 
 ## What it does
 
-When you ask Claude Code to create or audit `debian/` directories for Python projects, this skill ensures:
+When you ask Claude Code to create or audit Debian packages, this skill enforces conventions that prevent subtle bugs:
 
-- All required files are present (control, rules, changelog, copyright, source/format, lintian-overrides)
-- Cross-file consistency (e.g., `--use-system-packages` in rules matches python3-* in Depends)
-- Maintainer scripts follow correct patterns (idempotent postinst, debhelper-only prerm)
-- Service files include security hardening directives
-- dh-virtualenv build overrides prevent common build failures
+- **Required files** — ensures every `debian/` directory has control, rules, changelog, copyright, source/format, and lintian-overrides
+- **Cross-file consistency** — catches mismatches between rules, control, service files, dirs, and links that would pass lintian but fail at runtime
+- **Maintainer scripts** — enforces idempotent postinst, debhelper-only prerm, correct `#DEBHELPER#` placement, and the conffile trap guard
+- **Service hardening** — requires `NoNewPrivileges`, `ProtectSystem=strict`, `ProtectHome`, `PrivateTmp`, and `ReadWritePaths` in every systemd unit
+- **FHS compliance** — references the Filesystem Hierarchy Standard 3.0 for correct file placement
+- **Build overrides** — ensures `dh_strip` and `dh_shlibdeps` exclusions are present for dh-virtualenv packages
+
+The skill covers general Debian packaging (policy, FHS, dpkg behavior, conffiles, maintainer scripts, build commands) and includes specialized support for Python projects packaged with dh-virtualenv.
 
 ## Prerequisites
 
 Install the packages needed for Debian package development:
 
 ```bash
-# Essential — you need all of these
-sudo apt install build-essential debhelper dh-virtualenv devscripts \
-    python3 python3-venv python3-dev python3-setuptools \
-    fakeroot lintian
+# Essential — core packaging tools
+sudo apt install build-essential debhelper devscripts \
+    fakeroot lintian dpkg-dev
+
+# For Python projects using dh-virtualenv
+sudo apt install dh-virtualenv python3 python3-venv \
+    python3-dev python3-setuptools
 
 # Recommended — clean-room builds and changelog management
-sudo apt install pbuilder sbuild dch
+sudo apt install pbuilder sbuild
 
 # Optional — useful tools
-sudo apt install dpkg-dev quilt git-buildpackage
+sudo apt install quilt git-buildpackage
 ```
 
 | Package | What it does |
 |---------|-------------|
 | `build-essential` | gcc, make, and friends — needed for any compiled code |
 | `debhelper` | The `dh` command framework and all `dh_*` helpers |
-| `dh-virtualenv` | The `dh_virtualenv` helper that builds Python venvs inside .deb packages |
 | `devscripts` | `debuild`, `debsign`, `dch`, `uscan`, and other maintainer tools |
 | `fakeroot` | Run commands with fake root privileges for package building |
 | `lintian` | Static analysis — catches policy violations in built packages |
+| `dpkg-dev` | `dpkg-buildpackage`, `dpkg-source`, and low-level tools |
+| `dh-virtualenv` | Builds Python virtualenvs inside .deb packages |
 | `pbuilder` | Build in a clean chroot — catches undeclared Build-Depends |
 | `sbuild` | Modern chroot builder used by Debian infrastructure |
-| `dpkg-dev` | `dpkg-buildpackage`, `dpkg-source`, and low-level tools |
 | `quilt` | Patch management for `3.0 (quilt)` source format |
 | `git-buildpackage` | `gbp` suite for managing Debian packages in git repos |
 
 ## Installation
 
-Copy the `super-cow-powers/` directory into your Claude Code skills directory:
+Copy the skill directory into your Claude Code skills directory:
 
 ```bash
 cp -r super-cow-powers/ ~/.claude/skills/super-cow-powers/
@@ -63,33 +69,21 @@ cp -r super-cow-powers/ ~/.claude/skills/super-cow-powers/
 
 Or if using a plugin, place it under your plugin's `skills/` directory.
 
-## Structure
+## What's inside
 
 ```
 super-cow-powers/
-├── SKILL.md                    # Main skill — conventions and validation checklist
+├── SKILL.md                         # Conventions and gated validation checklists
 ├── references/
-│   ├── dh-virtualenv-patterns.md   # Install roots, vendoring, build overrides
-│   ├── systemd-integration.md      # Service files, maintainer scripts, firewalls
-│   └── debian-policy-summary.md    # Naming, versions, FHS, conffiles, control format
-├── templates/                  # Ready-to-use file templates with __PKG__ placeholders
-│   ├── rules
-│   ├── control
-│   ├── service
-│   ├── postinst
-│   ├── prerm
-│   ├── postrm
-│   ├── changelog
-│   ├── copyright
-│   ├── source-format
-│   ├── lintian-overrides
-│   ├── dirs
-│   ├── links
-│   ├── install
-│   ├── default
-│   └── logrotate
-└── evals/
-    └── evals.json              # Test cases for skill validation
+│   ├── debian-policy-summary.md     # Naming, versions, FHS 3.0, conffiles, dependency
+│   │                                  types, control format, build commands
+│   ├── dh-virtualenv-patterns.md    # Install roots, vendoring, build overrides
+│   └── systemd-integration.md       # Service files, maintainer scripts, firewalls
+└── templates/                       # Ready-to-use file templates (__PKG__ placeholders)
+    ├── control, rules, changelog, copyright, source-format
+    ├── service, postinst, prerm, postrm, default
+    ├── dirs, links, install, lintian-overrides
+    └── logrotate
 ```
 
 ## Contributing
