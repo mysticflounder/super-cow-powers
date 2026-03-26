@@ -113,6 +113,7 @@ We gladly accept AI-generated PRs. They are held to the same standard as human P
   - PostToolUse hook on Write/Edit to `debian/` files — validate conventions inline (e.g., reject prerm with manual `systemctl stop`, flag missing `set -e` or `#DEBHELPER#`)
   - Stop hook — run the cross-file validation script before the model declares packaging complete, blocking completion if checks fail
 - **Generalize beyond Claude Code** — the conventions, checklists, and templates are agent-agnostic. Package them for other AI coding assistants (Copilot, Cursor, Aider, OpenCode, etc.) so any agent that touches `debian/` directories gets the same guardrails.
+- **Ubuntu and Debian derivatives** — cover distro-specific differences (Ubuntu PPAs, Launchpad builds, `ubuntu` in version strings, `upstart` legacy, `systemd-resolved` conflicts) and test templates against Ubuntu LTS packaging guidelines.
 
 ## License
 
