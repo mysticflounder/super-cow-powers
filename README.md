@@ -61,18 +61,19 @@ sudo apt install quilt git-buildpackage
 
 ## Installation
 
-Copy the skill directory into your Claude Code skills directory:
+This repo is a Claude Code plugin marketplace. Add it and install:
 
-```bash
-cp -r super-cow-powers/ ~/.claude/skills/super-cow-powers/
+```
+/plugin marketplace add mysticflounder/super-cow-powers
+/plugin install super-cow-powers@super-cow-powers
 ```
 
-Or if using a plugin, place it under your plugin's `skills/` directory.
+This plugin is also available via the [turbotools](https://github.com/mysticflounder/turbotools) marketplace, which bundles it alongside other general-purpose Claude Code plugins.
 
 ## What's inside
 
 ```
-super-cow-powers/
+plugins/super-cow-powers/skills/debian-packaging/
 ├── SKILL.md                         # Conventions and gated validation checklists
 ├── references/
 │   ├── debian-policy-summary.md     # Naming, versions, FHS 3.0, conffiles, dependency

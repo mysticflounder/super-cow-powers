@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "super-cow-powers",
+  "description": "Debian packaging skill with deep dh-virtualenv support for Python projects",
+  "owner": {
+    "name": "Adam McKenna",
+    "email": "adam@mysticflounder.ai"
+  },
+  "plugins": [
+    {
+      "name": "super-cow-powers",
+      "description": "Debian packaging skill — conventions, templates, and validation checklists with deep dh-virtualenv support for Python projects",
+      "source": "./plugins/super-cow-powers",
+      "category": "development"
+    }
+  ]
+}
